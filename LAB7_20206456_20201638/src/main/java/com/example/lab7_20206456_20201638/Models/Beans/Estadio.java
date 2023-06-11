@@ -1,17 +1,17 @@
 package com.example.lab7_20206456_20201638.Models.Beans;
 
 public class Estadio {
-    private int idSeleccion;
+    private int id_estadio;
     private String nombreEstadio;
     private String provincia;
     private String club;
 
-    public int getIdSeleccion() {
-        return idSeleccion;
+    public int getId_estadio() {
+        return id_estadio;
     }
 
-    public void setIdSeleccion(int idSeleccion) {
-        this.idSeleccion = idSeleccion;
+    public void setId_estadio(int id_estadio) {
+        this.id_estadio = id_estadio;
     }
 
     public String getNombreEstadio() {

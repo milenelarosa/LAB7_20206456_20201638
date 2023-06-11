@@ -50,7 +50,7 @@
                             </div>
                             <div class="form-group">
                                 <!-- Email address input-->
-                                <input class="form-control" name="edad" id="edad" type="text" placeholder="Edad *" data-sb-validations="required,email" />
+                                <input class="form-control" name="edad" id="edad" type="text" placeholder="Edad *" data-sb-validations="required" />
                                 <div class="invalid-feedback" data-sb-feedback="email:required">Ingrese la edad.</div>
                             </div>
                             <div class="form-group mb-md-0">

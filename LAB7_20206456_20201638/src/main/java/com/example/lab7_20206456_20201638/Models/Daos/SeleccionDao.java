@@ -1,16 +1,47 @@
 package com.example.lab7_20206456_20201638.Models.Daos;
 
+import com.example.lab7_20206456_20201638.Models.Beans.ArraySeleccion;
+import com.example.lab7_20206456_20201638.Models.Beans.Jugador;
 import com.example.lab7_20206456_20201638.Models.Beans.Seleccion;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class SeleccionDao extends BaseDao{
 
     // Metodo para listar selecciones
+    public ArrayList<ArraySeleccion> listaSelecciones(){
+
+        ArrayList<ArraySeleccion> listaSelecciones = new ArrayList<>();
+
+        String sql = "SELECT s.idSeleccion, s.nombre,s.tecnico, e.nombre as 'estadio', CONCAT(sl.nombre, ' vs ', sv.nombre) AS primerPartido\n" +
+                "FROM seleccion s\n" +
+                "LEFT JOIN estadio e ON s.estadio_idEstadio = e.idEstadio\n" +
+                "LEFT JOIN ( SELECT p.seleccionLocal, p.seleccionVisitante, p.fecha FROM partido p, seleccion s\n" +
+                "\t\t\tWHERE p.seleccionLocal = s.idSeleccion OR p.seleccionVisitante = s.idSeleccion\n" +
+                "            ORDER BY p.fecha\n" +
+                "            LIMIT 1) AS p ON 1=1\n" +
+                "LEFT JOIN seleccion sl ON p.seleccionLocal = sl.idSeleccion\n" +
+                "LEFT JOIN seleccion sv ON p.seleccionVisitante = sv.idSeleccion;";
+
+        try (Connection connection = this.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)){
+
+            while (resultSet.next()) {
+                ArraySeleccion listSeleccion = new ArraySeleccion();
+                listSeleccion.setIdSeleccion(resultSet.getInt(1));
+                listSeleccion.setNombre(resultSet.getString(2));
+                listSeleccion.setTecnico(resultSet.getString(3));
+                listSeleccion.setEstadio(resultSet.getString(4));
+                listSeleccion.setPrimerPartido(resultSet.getString(5));
+                listaSelecciones.add(listSeleccion);
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        return listaSelecciones;
+    }
 
 
 
@@ -42,4 +73,33 @@ public class SeleccionDao extends BaseDao{
 
         return listaSelecciones;
     }
+    public void guardarSeleccion(ArraySeleccion arraySeleccion) {
+
+        String sql = "INSERT INTO estadio (idSeleccion, nombre, tecnico) "
+                + "VALUES (?, ?, ?)";
+
+        try (Connection connection = this.getConnection();
+             PreparedStatement p = connection.prepareStatement(sql)) {
+
+            p.setInt(1, arraySeleccion.getIdSeleccion());
+            p.setString(2, arraySeleccion.getNombre());
+            p.setString(3, arraySeleccion.getTecnico());
+
+            p.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /* public void borrarSeleccion(String idSeleccion) throws SQLException {
+
+        String sql = "DELETE FROM seleccion WHERE idSeleccion = ?";
+        try (Connection conn = this.getConection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+            pstmt.setString(1, idSeleccion);
+            pstmt.executeUpdate();
+        }
+    }
+    */
 }

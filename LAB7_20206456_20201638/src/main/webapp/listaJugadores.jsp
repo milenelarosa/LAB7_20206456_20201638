@@ -67,6 +67,7 @@
                         <td class="text-center"><%=j.getPosicion()%></td>
                         <td class="text-center"><%=j.getClub()%></td>
                         <td class="text-center"><%=j.getSeleccion().getNombreSeleccion()%></td>
+
                       </tr>
                       <% } %>
                     </tbody>

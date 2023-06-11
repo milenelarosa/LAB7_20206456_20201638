@@ -1,5 +1,7 @@
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.example.lab7_20206456_20201638.Models.Beans.Jugador" %><%--
+<%@ page import="com.example.lab7_20206456_20201638.Models.Beans.Jugador" %>
+<%@ page import="com.example.lab7_20206456_20201638.Models.Beans.Seleccion" %>
+<%@ page import="com.example.lab7_20206456_20201638.Models.Beans.ArraySeleccion" %><%--
   Created by IntelliJ IDEA.
   User: milene
   Date: 9/06/2023
@@ -7,7 +9,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<% ArrayList<Jugador> listaJugadores = (ArrayList<Jugador>) request.getAttribute("listaJugadores");%>
+<% ArrayList<ArraySeleccion> listaSelecciones = (ArrayList<ArraySeleccion>) request.getAttribute("listaSelecciones");%>
 <html>
     <jsp:include page="/static/head.jsp">
       <jsp:param name="title" value="Lista de Selecciones"/>
@@ -35,7 +37,7 @@
             <br>
             <div class="text-lg-end">
               <h7 class="section-subheading text-muted">¿No ve a su selección favorita? ¡Regístrela!<br></h7>
-              <a class="btn btn-success" href="<%=request.getContextPath()%>/SeleccionServlet">Registrar Selección </a>
+              <a class="btn btn-success" href="<%=request.getContextPath()%>/SeleccionServlet?a=crearSeleccion">Registrar Selección </a>
             </div>
 
             <br>
@@ -51,21 +53,20 @@
                       <tr>
                         <th class="text-center">ID</th>
                         <th class="text-center">Nombre</th>
-                        <th class="text-center">Edad</th>
-                        <th class="text-center">Posición</th>
-                        <th class="text-center">Club</th>
-                        <th class="text-center">Nombre de selección</th>
+                        <th class="text-center">Tecnico</th>
+                        <th class="text-center">Estadio</th>
+                        <th class="text-center">Primer partido</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <% for (Jugador j : listaJugadores) { %>
+                      <% for (ArraySeleccion s : listaSelecciones) { %>
                       <tr>
-                        <td class="text-center"><%=j.getIdJugador()%></td>
-                        <td class="text-center"><%=j.getNombreJugador()%></td>
-                        <td class="text-center"><%=j.getEdad()%></td>
-                        <td class="text-center"><%=j.getPosicion()%></td>
-                        <td class="text-center"><%=j.getClub()%></td>
-                        <td class="text-center"><%=j.getSeleccion().getNombreSeleccion()%></td>
+                        <td class="text-center"><%=s.getIdSeleccion()%></td>
+                        <td class="text-center"><%=s.getNombre()%></td>
+                        <td class="text-center"><%=s.getTecnico()%></td>
+                        <td class="text-center"><%=s.getEstadio()%></td>
+                        <td class="text-center"><%=s.getPrimerPartido()%></td>
+                          <td><a href="<%=request.getContextPath()%>/SeleccionServlet?action=borrar&id=<%=s.getIdSeleccion()%>" style="color: darkred;">Borrar</a></td>
                       </tr>
                       <% } %>
                     </tbody>
