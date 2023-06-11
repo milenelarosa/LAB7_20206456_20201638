@@ -1,11 +1,15 @@
-package com.example.lab7_20206456_20201638.Models.Beans;
+package com.example.lab7_20206456_20201638.Models.Dtos;
 
-public class ArraySeleccion {
+import com.example.lab7_20206456_20201638.Models.Beans.Estadio;
+
+public class ListarSeleccionesDto {
     private int idSeleccion;
     private String nombre;
     private String tecnico;
-    private String estadio;
+    private int idEstadio;
     private String primerPartido;
+    private Estadio estadio;
+
 
     public int getIdSeleccion() {
         return idSeleccion;
@@ -31,12 +35,12 @@ public class ArraySeleccion {
         this.tecnico = tecnico;
     }
 
-    public String getEstadio() {
-        return estadio;
+    public int getIdEstadio() {
+        return idEstadio;
     }
 
-    public void setEstadio(String estadio) {
-        this.estadio = estadio;
+    public void setIdEstadio(int idEstadio) {
+        this.idEstadio = idEstadio;
     }
 
     public String getPrimerPartido() {
@@ -45,5 +49,13 @@ public class ArraySeleccion {
 
     public void setPrimerPartido(String primerPartido) {
         this.primerPartido = primerPartido;
+    }
+
+    public Estadio getEstadio() {
+        return estadio;
+    }
+
+    public void setEstadio(Estadio estadio) {
+        this.estadio = estadio;
     }
 }

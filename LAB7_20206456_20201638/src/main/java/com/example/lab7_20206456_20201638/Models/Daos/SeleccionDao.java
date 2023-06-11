@@ -1,7 +1,7 @@
 package com.example.lab7_20206456_20201638.Models.Daos;
 
-import com.example.lab7_20206456_20201638.Models.Beans.ArraySeleccion;
-import com.example.lab7_20206456_20201638.Models.Beans.Jugador;
+import com.example.lab7_20206456_20201638.Models.Beans.Estadio;
+import com.example.lab7_20206456_20201638.Models.Dtos.ListarSeleccionesDto;
 import com.example.lab7_20206456_20201638.Models.Beans.Seleccion;
 
 import java.sql.*;
@@ -10,9 +10,9 @@ import java.util.ArrayList;
 public class SeleccionDao extends BaseDao{
 
     // Metodo para listar selecciones
-    public ArrayList<ArraySeleccion> listaSelecciones(){
+    public ArrayList<ListarSeleccionesDto> listaSelecciones(){
 
-        ArrayList<ArraySeleccion> listaSelecciones = new ArrayList<>();
+        ArrayList<ListarSeleccionesDto> listaSelecciones = new ArrayList<>();
 
         String sql = "SELECT s.idSeleccion, s.nombre,s.tecnico, e.nombre as 'estadio', CONCAT(sl.nombre, ' vs ', sv.nombre) AS primerPartido\n" +
                 "FROM seleccion s\n" +
@@ -29,11 +29,13 @@ public class SeleccionDao extends BaseDao{
              ResultSet resultSet = statement.executeQuery(sql)){
 
             while (resultSet.next()) {
-                ArraySeleccion listSeleccion = new ArraySeleccion();
+                ListarSeleccionesDto listSeleccion = new ListarSeleccionesDto();
+                Estadio estadio = new Estadio();
                 listSeleccion.setIdSeleccion(resultSet.getInt(1));
                 listSeleccion.setNombre(resultSet.getString(2));
                 listSeleccion.setTecnico(resultSet.getString(3));
-                listSeleccion.setEstadio(resultSet.getString(4));
+                estadio.setNombreEstadio(resultSet.getString(4));
+                listSeleccion.setEstadio(estadio);
                 listSeleccion.setPrimerPartido(resultSet.getString(5));
                 listaSelecciones.add(listSeleccion);
             }
@@ -43,10 +45,44 @@ public class SeleccionDao extends BaseDao{
         return listaSelecciones;
     }
 
+    public boolean verificarNombreExiste(String nombre) {
+        boolean existe = false;
+        String sql = "SELECT COUNT(*) FROM seleccion WHERE nombre = ?;";
 
+        try (Connection connection = this.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
+            pstmt.setString(1, nombre);
 
+            ResultSet resultSet = pstmt.executeQuery();
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+                existe = count > 0;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return existe;
+    }
 
+    public void guardarSeleccion(ListarSeleccionesDto seleccion) {
+
+        String sql = "INSERT INTO seleccion (nombre, tecnico, estadio_idEstadio) "
+                + "VALUES (?, ?, ?)";
+
+        try (Connection connection = this.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            pstmt.setString(1, seleccion.getNombre());
+            pstmt.setString(2, seleccion.getTecnico());
+            pstmt.setInt(3, seleccion.getEstadio().getId_estadio());
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 
 
     // No tocar
@@ -73,24 +109,7 @@ public class SeleccionDao extends BaseDao{
 
         return listaSelecciones;
     }
-    public void guardarSeleccion(ArraySeleccion arraySeleccion) {
 
-        String sql = "INSERT INTO estadio (idSeleccion, nombre, tecnico) "
-                + "VALUES (?, ?, ?)";
-
-        try (Connection connection = this.getConnection();
-             PreparedStatement p = connection.prepareStatement(sql)) {
-
-            p.setInt(1, arraySeleccion.getIdSeleccion());
-            p.setString(2, arraySeleccion.getNombre());
-            p.setString(3, arraySeleccion.getTecnico());
-
-            p.executeUpdate();
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
 
     /* public void borrarSeleccion(String idSeleccion) throws SQLException {
 

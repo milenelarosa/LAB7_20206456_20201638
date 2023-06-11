@@ -1,6 +1,5 @@
 package com.example.lab7_20206456_20201638.Models.Daos;
 
-import com.example.lab7_20206456_20201638.Models.Beans.ArraySeleccion;
 import com.example.lab7_20206456_20201638.Models.Beans.Estadio;
 
 import java.sql.Connection;

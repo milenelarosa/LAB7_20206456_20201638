@@ -1,7 +1,6 @@
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.example.lab7_20206456_20201638.Models.Beans.Jugador" %>
 <%@ page import="com.example.lab7_20206456_20201638.Models.Beans.Seleccion" %>
-<%@ page import="com.example.lab7_20206456_20201638.Models.Beans.ArraySeleccion" %><%--
+<%@ page import="com.example.lab7_20206456_20201638.Models.Dtos.ListarSeleccionesDto" %><%--
   Created by IntelliJ IDEA.
   User: milene
   Date: 9/06/2023
@@ -9,7 +8,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<% ArrayList<ArraySeleccion> listaSelecciones = (ArrayList<ArraySeleccion>) request.getAttribute("listaSelecciones");%>
+<% ArrayList<ListarSeleccionesDto> listaSelecciones = (ArrayList<ListarSeleccionesDto>) request.getAttribute("listaSelecciones");%>
 <html>
     <jsp:include page="/static/head.jsp">
       <jsp:param name="title" value="Lista de Selecciones"/>
@@ -59,12 +58,12 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <% for (ArraySeleccion s : listaSelecciones) { %>
+                      <% for (ListarSeleccionesDto s : listaSelecciones) { %>
                       <tr>
                         <td class="text-center"><%=s.getIdSeleccion()%></td>
                         <td class="text-center"><%=s.getNombre()%></td>
                         <td class="text-center"><%=s.getTecnico()%></td>
-                        <td class="text-center"><%=s.getEstadio()%></td>
+                        <td class="text-center"><%=s.getEstadio().getNombreEstadio()%></td>
                         <td class="text-center"><%=s.getPrimerPartido()%></td>
                           <td><a href="<%=request.getContextPath()%>/SeleccionServlet?action=borrar&id=<%=s.getIdSeleccion()%>" style="color: darkred;">Borrar</a></td>
                       </tr>

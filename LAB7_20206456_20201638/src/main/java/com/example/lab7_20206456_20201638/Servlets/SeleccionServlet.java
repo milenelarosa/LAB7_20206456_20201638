@@ -1,11 +1,9 @@
 package com.example.lab7_20206456_20201638.Servlets;
 
 
-import com.example.lab7_20206456_20201638.Models.Beans.ArraySeleccion;
-import com.example.lab7_20206456_20201638.Models.Beans.Jugador;
-import com.example.lab7_20206456_20201638.Models.Beans.Seleccion;
+import com.example.lab7_20206456_20201638.Models.Beans.Estadio;
+import com.example.lab7_20206456_20201638.Models.Dtos.ListarSeleccionesDto;
 import com.example.lab7_20206456_20201638.Models.Daos.EstadioDao;
-import com.example.lab7_20206456_20201638.Models.Daos.JugadorDao;
 import com.example.lab7_20206456_20201638.Models.Daos.SeleccionDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -62,21 +60,30 @@ public class SeleccionServlet extends HttpServlet {
         SeleccionDao seleccionDao = new SeleccionDao();
         switch (action) {
             case "crear":
-                ArraySeleccion a = new ArraySeleccion();
-                String nombre = request.getParameter("nombre");
+                ListarSeleccionesDto listarSeleccionesDto = new ListarSeleccionesDto();
+                Estadio estadio = new Estadio();
+                String nombreSeleccion = request.getParameter("nombre");
                 String tecnico = request.getParameter("tecnico");
-                String id_estadioSTR = request.getParameter("estadio_id");
-                int id_estadio = Integer.parseInt(id_estadioSTR);
+                String id_estadioStr = request.getParameter("estadio_id");
+                int id_estadio = Integer.parseInt(id_estadioStr);
 
-                if(nombre == null || nombre.isEmpty()) {
-                    response.sendRedirect(request.getContextPath() + "/JugadorServlet?a=crearSeleccion");
+                if(nombreSeleccion.isEmpty() || tecnico.isEmpty() || id_estadioStr.isEmpty()) {
+                    response.sendRedirect(request.getContextPath() + "/SeleccionServlet?a=crearSeleccion");
                     return;
                 }
-                a.setNombre(nombre);
-                a.setTecnico(tecnico);
-                a.setIdSeleccion(id_estadio);
 
-                seleccionDao.guardarSeleccion(a);
+                if(seleccionDao.verificarNombreExiste(nombreSeleccion)){
+                    response.sendRedirect(request.getContextPath() + "/SeleccionServlet?a=crearSeleccion");
+                    return;
+                }
+
+                listarSeleccionesDto.setNombre(nombreSeleccion);
+                listarSeleccionesDto.setTecnico(tecnico);
+                estadio.setId_estadio(id_estadio);
+                listarSeleccionesDto.setEstadio(estadio);
+
+                seleccionDao.guardarSeleccion(listarSeleccionesDto);
+
                 response.sendRedirect(request.getContextPath() + "/SeleccionServlet#selecciones");
                 break;
         }
