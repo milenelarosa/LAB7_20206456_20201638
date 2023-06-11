@@ -84,8 +84,6 @@ public class SeleccionDao extends BaseDao{
         }
     }
 
-
-    // No tocar
     public ArrayList<Seleccion> listarSeleccionesComboBox(){
         ArrayList<Seleccion> listaSelecciones = new ArrayList<>();
 
@@ -111,14 +109,68 @@ public class SeleccionDao extends BaseDao{
     }
 
 
-    /* public void borrarSeleccion(String idSeleccion) throws SQLException {
+    public void borrarSeleccion(String idSeleccion) throws SQLException {
+
+        if (existeAsignacionPartido(idSeleccion)) {
+            throw new IllegalStateException("La selección tiene un partido asignado.");
+        }
 
         String sql = "DELETE FROM seleccion WHERE idSeleccion = ?";
-        try (Connection conn = this.getConection();
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
             pstmt.setString(1, idSeleccion);
             pstmt.executeUpdate();
         }
     }
-    */
+
+    private boolean existeAsignacionPartido(String idSeleccionStr) {
+        boolean existe = false;
+
+        int idSeleccion = Integer.parseInt(idSeleccionStr);
+
+        String sql = "SELECT COUNT(*) FROM seleccion s, partido p\n" +
+                "WHERE s.? = p.seleccionLocal or s.? = p.seleccionVisitante;";
+
+        try (Connection connection = this.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idSeleccion);
+            pstmt.setInt(2, idSeleccion);
+
+            ResultSet resultSet = pstmt.executeQuery();
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+                existe = count > 0;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return existe;
+    }
+
+    public Seleccion obtenerSeleccion(String idSeleccion) {
+
+        Seleccion seleccion = null;
+
+        String sql = "SELECT * FROM seleccion WHERE idSeleccion = ?";
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+            pstmt.setString(1, idSeleccion);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    seleccion = new Seleccion();
+                    seleccion.setIdSeleccion(rs.getInt(1));
+                    seleccion.setNombreSeleccion(rs.getString(2));
+                    seleccion.setTecnico(rs.getString(3));
+                    seleccion.setIdEstadio(rs.getInt(4));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        return seleccion;
+    }
 }

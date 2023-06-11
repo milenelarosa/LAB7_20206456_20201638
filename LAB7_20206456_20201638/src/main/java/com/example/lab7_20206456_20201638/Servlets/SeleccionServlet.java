@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet(name = "SeleccionServlet", value = "/SeleccionServlet")
 public class SeleccionServlet extends HttpServlet {
@@ -34,22 +35,20 @@ public class SeleccionServlet extends HttpServlet {
                 request.setAttribute("estadio", estadioDao.listaEstadioCombobox());
                 request.getRequestDispatcher("crearSeleccion.jsp").forward(request,response);
                 break;
-            /* case "borrar":
+
+            case "borrar":
                 String idSeleccion = request.getParameter("id");
-                if (SeleccionDao.(idSeleccion) != null) {
+                if (seleccionDao.obtenerSeleccion(idSeleccion) != null) {
                     try {
-                        SeleccionDao.borra(jobId);
-                    } catch (SQLException e) {
-                        response.sendRedirect(request.getContextPath() + "/JobServlet?err=Error al borrar el trabajo");
+                        seleccionDao.borrarSeleccion(idSeleccion);
+                    } catch (SQLException | IllegalStateException e) {
+
+                        response.sendRedirect(request.getContextPath() + "/SeleccionServlet?err=Error al borrar la seleccion");
                     }
                 }
-                response.sendRedirect(request.getContextPath() + "/JobServlet?msg=Trabajo borrado exitosamente");
+                response.sendRedirect(request.getContextPath() + "/SeleccionServlet#selecciones?msg=Seleccion borrada exitosamente");
                 break;
-                break;
-               
-             */
         }
-
     }
 
     @Override

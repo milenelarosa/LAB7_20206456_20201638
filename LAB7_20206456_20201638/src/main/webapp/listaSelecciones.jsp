@@ -65,7 +65,7 @@
                         <td class="text-center"><%=s.getTecnico()%></td>
                         <td class="text-center"><%=s.getEstadio().getNombreEstadio()%></td>
                         <td class="text-center"><%=s.getPrimerPartido()%></td>
-                          <td><a href="<%=request.getContextPath()%>/SeleccionServlet?action=borrar&id=<%=s.getIdSeleccion()%>" style="color: darkred;">Borrar</a></td>
+                          <td><a href="<%=request.getContextPath()%>/SeleccionServlet?a=borrar&id=<%=s.getIdSeleccion()%>" style="color: darkred;">Borrar</a></td>
                       </tr>
                       <% } %>
                     </tbody>
